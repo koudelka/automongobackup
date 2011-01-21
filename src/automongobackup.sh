@@ -301,11 +301,14 @@ if [ "$DBHOST" = "localhost" ]; then
 else
 	HOST=$DBHOST
 fi
+
+# Crude replica set awareness
+DBHOST=`mongo --host $DBHOST --quiet --eval "var im = rs.isMaster(); if(im.ismaster && im.hosts) { im.hosts[2] } else { '$DBHOST' }"`
 	
 echo ======================================================================
 echo AutoMongoBackup VER $VER
 echo 
-echo Backup of Database Server - $HOST
+echo Backup of Database Server - $HOST, using $DBHOST
 echo ======================================================================
 
 echo Backup Start `date`
